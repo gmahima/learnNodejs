@@ -1,13 +1,14 @@
 var Profile = require("./profile.js");
-
+var renderer = require('./renderer.js');
 
 
 function home (request, response) {
   if (request.url === '/') {
         response.writeHead(200, {'Content-Type': 'text/plain'});
-  response.write('Header \n');
-  response.write('search \n');
-  response.end('Footer \n');
+  renderer.view('header', {}, response);
+  renderer.view('search', {}, response);
+  renderer.view('footer', {}, response);
+    response.end();
   }
 
 }
@@ -16,7 +17,7 @@ function user (request, response) {
   var username = request.url.replace('/', '');
   if (username.length > 0) {
           response.writeHead(200, {'Content-Type': 'text/plain'});
-  response.write('Header \n');
+  renderer.view('header', {}, response);
     
 var studentProfile = new Profile(username);
 studentProfile.on("end", function (profileJSON) {
@@ -27,8 +28,9 @@ console.dir;
       badges: profileJSON.badges.length,
       javascriptPoints: profileJSON.points.JavaScript
     }
-        response.write(values.badges + '\n');
-  response.end('Footer \n');
+        renderer.view('profile', {values}, response);
+  renderer.view('footer', {}, response);
+  response.end();
 });
 
     
@@ -36,8 +38,10 @@ console.dir;
     
     studentProfile.on("error", function(error) {
     console.error;
-      response.write(error.message);
-      response.end('Footer \n');
+      renderer.view('error', {errorMessage: error.message}, response);
+      renderer.view('search', {}, response);
+      renderer.view('footer', {}, response);
+      response.end();
     });
 
 
