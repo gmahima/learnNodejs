@@ -2,6 +2,7 @@ var Profile = require("./profile.js");
 var renderer = require('./renderer.js');
 
 
+
 function home (request, response) {
   if (request.url === '/') {
         response.writeHead(200, {'Content-Type': 'text/plain'});
@@ -28,7 +29,7 @@ console.dir;
       badges: profileJSON.badges.length,
       javascriptPoints: profileJSON.points.JavaScript
     }
-        renderer.view('profile', {values}, response);
+        renderer.view('profile', values, response);
   renderer.view('footer', {}, response);
   response.end();
 });
