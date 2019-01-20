@@ -1,3 +1,4 @@
+var querystring = require("querystring");
 var Profile = require("./profile.js");
 var renderer = require('./renderer.js');
 var commonHeaders = {'Content-Type': 'text/html'};
@@ -6,11 +7,22 @@ var commonHeaders = {'Content-Type': 'text/html'};
 
 function home (request, response) {
   if (request.url === '/') {
+    if (request.method.toLowerCase() === 'get') {
         response.writeHead(200, commonHeaders);
-  renderer.view('header', {}, response);
-  renderer.view('search', {}, response);
-  renderer.view('footer', {}, response);
-    response.end();
+        renderer.view('header', {}, response);
+        renderer.view('search', {}, response);
+        renderer.view('footer', {}, response);
+        response.end();
+    }
+    else {
+      request.on('data', function (postBody) {
+        let query = querystring.parse(postBody.toString()); //JSON object with prop username
+        response.writeHead(303, {"Location": '/' + query.username});
+      console.log(query.username);
+      response.end()});
+    }
+    
+
   }
 
 }
